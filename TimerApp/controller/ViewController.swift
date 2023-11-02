@@ -15,14 +15,16 @@ class ViewController: UIViewController {
     private let unenabledLapButtonColor = UIColor(red: 171/255, green: 171/255, blue: 171/255, alpha: 0.2)
     private let lapResetButtonColor = UIColor(red: 171/255, green: 171/255, blue: 171/255, alpha: 0.4)
     private let buttonDefaultAlpha = 0.7
+    private let fractionTimer = FractionTimer()
     
     var startPauseButtonState = StartPauseButtonState.start
     var lapResetButtonState = LapResetButtonState.unenabledLap
     
+
     private lazy var timerLabel: UILabel = {
         let label = UILabel()
         label.text = "00:00,00"
-        label.font = UIFont.systemFont(ofSize: 75, weight: .thin)
+        label.font = UIFont.monospacedDigitSystemFont(ofSize: 75, weight: UIFont.Weight.thin)
         label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -58,6 +60,7 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        fractionTimer.addDelegate(delegate: timerDelegate)
         setupViews()
     }
     
@@ -66,7 +69,6 @@ class ViewController: UIViewController {
         view.addSubview(lapResetButton)
         view.addSubview(startPauseButton)
         view.addSubview(timerLabel)
-
         NSLayoutConstraint.activate([
             lapResetButton.topAnchor.constraint(equalTo: view.centerYAnchor),
             lapResetButton.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: -100),
@@ -82,9 +84,10 @@ class ViewController: UIViewController {
     }
     
     @objc func lapResetButtonTapped(sender: UIButton) {
-        
         switch lapResetButtonState {
         case .reset:
+            timerLabel.text = "00:00,00"
+            fractionTimer.reset()
             lapResetButtonState = .unenabledLap
             break
         case .unenabledLap:
@@ -93,14 +96,18 @@ class ViewController: UIViewController {
             timeMeasure()
             break
         }
-        
         setupLapResetButton(button: lapResetButton)
     }
     
     @objc func startPauseButtonTapped(sender: UIButton) {
-        startPauseButtonState = startPauseButtonState == .start ? .pause : .start
+        if startPauseButtonState == .start {
+            fractionTimer.start()
+        } else {
+            fractionTimer.stop()
+        }
+        startPauseButtonState = startPauseButtonState == .start ? .stop : .start
         setupStartPauseButton(button: startPauseButton)
-        lapResetButtonState = (startPauseButtonState == .pause) ? .lap : .reset
+        lapResetButtonState = (startPauseButtonState == .stop) ? .lap : .reset
         setupLapResetButton(button: lapResetButton)
     }
     
@@ -114,7 +121,7 @@ class ViewController: UIViewController {
             button.setTitle(startPauseButtonState.rawValue, for: .normal)
             button.setTitleColor(.green, for: .normal)
             button.backgroundColor = startButtonColor
-        case .pause:
+        case .stop:
             button.setTitle(startPauseButtonState.rawValue, for: .normal)
             button.setTitleColor(.red, for: .normal)
             button.backgroundColor = pauseButtonColor
@@ -137,5 +144,10 @@ class ViewController: UIViewController {
             button.backgroundColor = lapResetButtonColor
         }
     }
+    
+    func timerDelegate(tuple : (minutes: Int, seconds: Int, fractions: Int)) {
+        timerLabel.text = "\(String(format: "%02d", tuple.minutes)):\(String(format: "%02d", tuple.seconds)),\(String(format: "%02d", tuple.fractions))"
+    }
+    
 }
 
