@@ -9,7 +9,7 @@ import Foundation
 
     enum StartPauseButtonState: String {
         case start = "Start"
-        case pause = "Stop"
+        case stop = "Stop"
     }
     
     enum LapResetButtonState: String {

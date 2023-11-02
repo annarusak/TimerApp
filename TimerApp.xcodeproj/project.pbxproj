@@ -15,6 +15,7 @@
 		F44083E22AED6F58007D6ABD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F44083E12AED6F58007D6ABD /* Assets.xcassets */; };
 		F44083E52AED6F58007D6ABD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F44083E32AED6F58007D6ABD /* LaunchScreen.storyboard */; };
 		F44083EF2AED79FB007D6ABD /* gitignore.txt in Resources */ = {isa = PBXBuildFile; fileRef = F44083EE2AED79FB007D6ABD /* gitignore.txt */; };
+		F461B6F42AF3D19B0078B2AD /* FractionTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F461B6F32AF3D19B0078B2AD /* FractionTimer.swift */; };
 		F485A37B2AF28E7000A72BBF /* UIButtonExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F485A37A2AF28E7000A72BBF /* UIButtonExtensions.swift */; };
 /* End PBXBuildFile section */
 
@@ -29,6 +30,7 @@
 		F44083E42AED6F58007D6ABD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F44083E62AED6F58007D6ABD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F44083EE2AED79FB007D6ABD /* gitignore.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = gitignore.txt; sourceTree = "<group>"; };
+		F461B6F32AF3D19B0078B2AD /* FractionTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FractionTimer.swift; sourceTree = "<group>"; };
 		F485A37A2AF28E7000A72BBF /* UIButtonExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIButtonExtensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -81,6 +83,7 @@
 			isa = PBXGroup;
 			children = (
 				F43796742AEFB3B00053A977 /* ButtonStates.swift */,
+				F461B6F32AF3D19B0078B2AD /* FractionTimer.swift */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -183,6 +186,7 @@
 				F44083DD2AED6F57007D6ABD /* ViewController.swift in Sources */,
 				F485A37B2AF28E7000A72BBF /* UIButtonExtensions.swift in Sources */,
 				F44083D92AED6F57007D6ABD /* AppDelegate.swift in Sources */,
+				F461B6F42AF3D19B0078B2AD /* FractionTimer.swift in Sources */,
 				F43796752AEFB3B00053A977 /* ButtonStates.swift in Sources */,
 				F44083DB2AED6F57007D6ABD /* SceneDelegate.swift in Sources */,
 			);
