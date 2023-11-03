@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     private let roundButtonSize : CGFloat = 90
     private let startButtonColor = UIColor(red: 52/255, green: 199/255, blue: 89/255, alpha: 0.3)
@@ -16,6 +16,9 @@ class ViewController: UIViewController {
     private let lapResetButtonColor = UIColor(red: 171/255, green: 171/255, blue: 171/255, alpha: 0.4)
     private let buttonDefaultAlpha = 0.7
     private let fractionTimer = FractionTimer()
+    var myTableView = UITableView()
+    let identifier = "lapCell"
+    let array = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
     
     var startPauseButtonState = StartPauseButtonState.start
     var lapResetButtonState = LapResetButtonState.unenabledLap
@@ -61,7 +64,17 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         fractionTimer.addDelegate(delegate: timerDelegate)
+        createTable()
         setupViews()
+    }
+    
+    func createTable() {
+//      MARK: - по-другому сделать размерные привязки таблицы
+        self.myTableView = UITableView(frame: view.bounds.offsetBy(dx: 0, dy: 550), style: .plain)
+        myTableView.register(UITableViewCell.self, forCellReuseIdentifier: identifier)
+        self.myTableView.delegate = self
+        self.myTableView.dataSource = self
+        view.addSubview(myTableView)
     }
     
     func setupViews() {
@@ -79,7 +92,8 @@ class ViewController: UIViewController {
             startPauseButton.widthAnchor.constraint(equalToConstant: roundButtonSize),
             startPauseButton.heightAnchor.constraint(equalToConstant: roundButtonSize),
             timerLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            timerLabel.bottomAnchor.constraint(equalTo: startPauseButton.topAnchor, constant: -120)
+            timerLabel.bottomAnchor.constraint(equalTo: view.centerYAnchor, constant: -100)
+//            myTableView.topAnchor.constraint(equalTo: startPauseButton.bottomAnchor, constant: -200)
         ])
     }
     
@@ -148,6 +162,42 @@ class ViewController: UIViewController {
     func timerDelegate(tuple : (minutes: Int, seconds: Int, fractions: Int)) {
         timerLabel.text = "\(String(format: "%02d", tuple.minutes)):\(String(format: "%02d", tuple.seconds)),\(String(format: "%02d", tuple.fractions))"
     }
+    
+    
+    // MARK: - UITableViewDataSource
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return array.count
+    }
+    //      MARK: - Как сделать dequeueReusableCell?
+    //        tableView.dequeueReusableCell(withIdentifier: "lapCell", for: indexPath)
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        tableView.separatorStyle = .singleLine
+        tableView.separatorInset = .init(top: 0, left: 10, bottom: 0, right: 10)
+        tableView.separatorColor = .white
+        tableView.backgroundColor = .black
+        let cell = UITableViewCell(style: UITableViewCell.CellStyle.value1, reuseIdentifier: "lapCell")
+        let number = array[indexPath.row]
+        
+//      MARK: - Деприкейтед - исправить
+        //        var content = cell.defaultContentConfiguration()
+        //        content.text = number
+        //        content.secondaryText = number
+        //        cell.contentConfiguration = content
+        cell.backgroundColor = .black
+        cell.textLabel?.text = number
+        cell.detailTextLabel?.text = "1"
+        cell.textLabel?.textColor = .white
+        cell.detailTextLabel?.textColor = .white
+        return cell
+    }
+    
+    // MARK: UITableViewDelegate
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 40.0
+    }
+    
+    
     
 }
 
