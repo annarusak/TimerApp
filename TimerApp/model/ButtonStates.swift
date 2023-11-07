@@ -1,10 +1,3 @@
-//
-//  Enums.swift
-//  TimerApp
-//
-//  Created by Анна on 30.10.23.
-//
-
 import Foundation
 
     enum StartPauseButtonState: String {

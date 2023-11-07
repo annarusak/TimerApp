@@ -1,19 +1,12 @@
-//
-//  Timer.swift
-//  TimerApp
-//
-//  Created by Анна on 2.11.23.
-//
-
 import Foundation
 import UIKit
 
 class FractionTimer {
     
-    var startTime: Date?
-    var sceduledTimer: Timer!
+    private var startTime: Date?
+    private var sceduledTimer: Timer!
+    private var delegate: (((Int, Int, Int)) -> Void)?
     var (minutes, seconds, fractions) = (0, 0, 0)
-    var delegate: (((Int, Int, Int)) -> Void)?
  
     @objc func keepTimer() {
         if minutes < 100 {

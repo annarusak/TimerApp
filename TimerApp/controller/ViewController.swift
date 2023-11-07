@@ -16,29 +16,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     private let lapResetButtonColor = UIColor(red: 171/255, green: 171/255, blue: 171/255, alpha: 0.4)
     private let buttonDefaultAlpha = 0.7
     private let fractionTimer = FractionTimer()
-    var lapTableView = UITableView()
-    let identifier = "lapCell"
-    var lapTimerTimestamps: [String] = []
-    var lastLapsTimeString: [String] = []
-    var lapTimes: [Int] = []
-    var statusOfValue = foundMaxMinValue.middleValue
-    
-    enum foundMaxMinValue {
-        case maxValue
-        case minValue
-        case middleValue
-    }
-
-    var lapCount = 0 {
-        didSet {
-            if (lapCount == 0) {
-                lapTimerTimestamps.removeAll()
-            } else {
-                lapTimestampsUpdate()
-            }
-            lapTableView.reloadData()
-        }
-    }
+    private var lapTableView = UITableView()
+    private let identifier = "lapCell"
+    private let lapTimeManger = LapTimeManager()
     
     var startPauseButtonState = StartPauseButtonState.start {
         didSet {
@@ -165,7 +145,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         case .unenabledLap:
             return
         case .lap:
-            lapCount += 1
+            lapTimestampsUpdate()
+            lapTableView.reloadData()
         }
         setupLapResetButton(button: lapResetButton)
     }
@@ -181,56 +162,17 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         timerLabel.text = "00:00,00"
         fractionTimer.reset()
         lapResetButtonState = .unenabledLap
-        lapCount = 0
-        lastLapsTimeString.removeAll()
-        lapTimes.removeAll()
+        lapTimeManger.reset()
         lapTableView.reloadData()
         
     }
 
     private func lapTimestampsUpdate() {
         if let timeMeasure = timerLabel.text {
-            lapTimerTimestamps.append(timeMeasure)
-            calculateLapTime()
+            lapTimeManger.addLap(timestamp: timeMeasure)
         }
     }
-    
-    private func formatTime(timerPeriod: Int) -> String {
-        let minutes = timerPeriod / 6000  // Calculate minutes (60 seconds * 100 centiseconds)
-        let seconds = (timerPeriod / 100) % 60  // Calculate remaining seconds
-        let centiseconds = timerPeriod % 100  // Calculate remaining centiseconds
-        // Create the formatted string
-        let formattedTime = String(format: "%02d:%02d,%02d", minutes, seconds, centiseconds)
-        
-        return formattedTime
-    }
-    
-    private func calculateLapTime() {
-        if lapCount == 1 {
-            print(lapTimerTimestamps[0])
-            lastLapsTimeString.append(lapTimerTimestamps[0])
-            let firstLapTime = Int(lapTimerTimestamps[0].replacingOccurrences(of: "[:|,]", with: "", options: .regularExpression)) ?? 0
-            lapTimes.append(firstLapTime)
-        } else {
-            let countOfArray = lapTimerTimestamps.count
-            let strTimestampLastLap = lapTimerTimestamps[countOfArray - 1]
-            let strTimestampPreLastLap = lapTimerTimestamps[countOfArray - 2]
-            print(strTimestampLastLap)
-            print(strTimestampPreLastLap)
 
-            let timestampLastLap = Int(strTimestampLastLap.replacingOccurrences(of: "[:|,]", with: "", options: .regularExpression)) ?? 0
-            let timestampPreLastLap = Int(strTimestampPreLastLap.replacingOccurrences(of: "[:|,]", with: "", options: .regularExpression)) ?? 0
-
-            let lapTime = timestampLastLap - timestampPreLastLap
-            lapTimes.append(lapTime)
-            print(lapTime)
-
-            let lapTimeString = formatTime(timerPeriod: lapTime)
-
-            lastLapsTimeString.insert(lapTimeString, at: 0)
-        }
-    }
-    
     func timerDelegate(tuple : (minutes: Int, seconds: Int, fractions: Int)) {
         timerLabel.text = "\(String(format: "%02d", tuple.minutes)):\(String(format: "%02d", tuple.seconds)),\(String(format: "%02d", tuple.fractions))"
     }
@@ -239,7 +181,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     // MARK: - UITableViewDataSource
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return lapCount
+        return lapTimeManger.getLapCount()
     }
     
     //      MARK: - dequeueReusableCell?
@@ -254,33 +196,27 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         //        content.secondaryText = number
         //        cell.contentConfiguration = content
         
+        let lapCount = lapTimeManger.getLapCount()
         let lapTableNumber = lapCount - indexPath.row
-        let lastLapTimeString = lastLapsTimeString[indexPath.row]
+        let lastLapTimeString = lapTimeManger.getLastLapTime(lap: indexPath.row) ?? ""
         cell.textLabel?.text = "Lap " + String(lapTableNumber)
+
         if lapCount < 3 {
             cell.textLabel?.textColor = .white
             cell.detailTextLabel?.textColor = .white
             cell.detailTextLabel?.text = String(lastLapTimeString)
         } else {
-            let maxMeasureValue = lapTimes.max()
-            let minMeasureValue = lapTimes.min()
-            let strMaxMeasureValue = String(maxMeasureValue!)
-            let strMinMeasureValue = String(minMeasureValue!)
-
             let cellText = lastLapTimeString
-
             cell.detailTextLabel?.text = cellText
             let cellTextWithoutPunktMarks = cellText.replacingOccurrences(of: "[:|,]", with: "", options: .regularExpression)
 
-            if cellTextWithoutPunktMarks.contains(strMaxMeasureValue) {
+            if cellTextWithoutPunktMarks.contains(lapTimeManger.lapMax()) {
                 cell.detailTextLabel?.textColor = .red
                 cell.textLabel?.textColor = .red
-            }
-            else if cellTextWithoutPunktMarks.contains(strMinMeasureValue) {
+            } else if cellTextWithoutPunktMarks.contains(lapTimeManger.lapMin()) {
                 cell.detailTextLabel?.textColor = .green
                 cell.textLabel?.textColor = .green
-            }
-            else {
+            } else {
                 cell.detailTextLabel?.textColor = .white
                 cell.textLabel?.textColor = .white
             }
