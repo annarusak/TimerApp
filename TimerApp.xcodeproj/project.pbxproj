@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F41860692AFA5EC500BEBC86 /* LapTimeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41860682AFA5EC500BEBC86 /* LapTimeManager.swift */; };
 		F43796752AEFB3B00053A977 /* ButtonStates.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43796742AEFB3B00053A977 /* ButtonStates.swift */; };
 		F44083D92AED6F57007D6ABD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F44083D82AED6F57007D6ABD /* AppDelegate.swift */; };
 		F44083DB2AED6F57007D6ABD /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F44083DA2AED6F57007D6ABD /* SceneDelegate.swift */; };
@@ -20,6 +21,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		F41860682AFA5EC500BEBC86 /* LapTimeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LapTimeManager.swift; sourceTree = "<group>"; };
 		F43796742AEFB3B00053A977 /* ButtonStates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonStates.swift; sourceTree = "<group>"; };
 		F44083D52AED6F57007D6ABD /* TimerApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TimerApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F44083D82AED6F57007D6ABD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -84,6 +86,7 @@
 			children = (
 				F43796742AEFB3B00053A977 /* ButtonStates.swift */,
 				F461B6F32AF3D19B0078B2AD /* FractionTimer.swift */,
+				F41860682AFA5EC500BEBC86 /* LapTimeManager.swift */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -184,6 +187,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F44083DD2AED6F57007D6ABD /* ViewController.swift in Sources */,
+				F41860692AFA5EC500BEBC86 /* LapTimeManager.swift in Sources */,
 				F485A37B2AF28E7000A72BBF /* UIButtonExtensions.swift in Sources */,
 				F44083D92AED6F57007D6ABD /* AppDelegate.swift in Sources */,
 				F461B6F42AF3D19B0078B2AD /* FractionTimer.swift in Sources */,
