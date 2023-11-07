@@ -1,9 +1,4 @@
-//
-//  ViewController.swift
-//  TimerApp
-//
-//  Created by Анна on 28.10.23.
-//
+
 
 import UIKit
 
@@ -20,7 +15,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     private let identifier = "lapCell"
     private let lapTimeManger = LapTimeManager()
     
-    var startPauseButtonState = StartPauseButtonState.start {
+    private var startPauseButtonState = StartPauseButtonState.start {
         didSet {
             if (startPauseButtonState == .stop) {
                 fractionTimer.start()
@@ -29,8 +24,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             }
         }
     }
-    var lapResetButtonState = LapResetButtonState.unenabledLap
-    
+    private var lapResetButtonState = LapResetButtonState.unenabledLap
     
     private lazy var timerLabel: UILabel = {
         let label = UILabel()
@@ -68,18 +62,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         button.changeAlphaWhenHighlighted()
         return button
     }()
- 
-    func createTable() {
-        //      MARK: - по-другому сделать размерные привязки таблицы
-        lapTableView = UITableView(frame: view.bounds.offsetBy(dx: 0, dy: 550), style: .plain)
-        lapTableView.register(UITableViewCell.self, forCellReuseIdentifier: identifier)
-        lapTableView.delegate = self
-        lapTableView.dataSource = self
-        lapTableView.separatorStyle = .singleLine
-        lapTableView.separatorInset = .init(top: 0, left: 10, bottom: 0, right: 10)
-        lapTableView.separatorColor = .white
-        lapTableView.backgroundColor = .black
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -88,7 +70,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         setupViews()
     }
     
-    func setupViews() {
+    private func setupViews() {
         view.backgroundColor = .black
         view.addSubview(lapResetButton)
         view.addSubview(startPauseButton)
@@ -99,16 +81,35 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             lapResetButton.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: -100),
             lapResetButton.widthAnchor.constraint(equalToConstant: roundButtonSize),
             lapResetButton.heightAnchor.constraint(equalToConstant: roundButtonSize),
+            //
             startPauseButton.topAnchor.constraint(equalTo: view.centerYAnchor),
             startPauseButton.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: +100),
             startPauseButton.widthAnchor.constraint(equalToConstant: roundButtonSize),
             startPauseButton.heightAnchor.constraint(equalToConstant: roundButtonSize),
+            //
             timerLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            timerLabel.bottomAnchor.constraint(equalTo: view.centerYAnchor, constant: -100)
+            timerLabel.bottomAnchor.constraint(equalTo: view.centerYAnchor, constant: -100),
+            //
+            lapTableView.topAnchor.constraint(equalTo: startPauseButton.bottomAnchor, constant: 20),
+            lapTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            lapTableView.leftAnchor.constraint(equalTo: view.leftAnchor),
+            lapTableView.rightAnchor.constraint(equalTo: view.rightAnchor)
         ])
     }
     
-    func setupStartPauseButton(button: UIButton) {
+    private func createTable() {
+        lapTableView = UITableView()
+        lapTableView.register(UITableViewCell.self, forCellReuseIdentifier: identifier)
+        lapTableView.delegate = self
+        lapTableView.dataSource = self
+        lapTableView.separatorStyle = .singleLine
+        lapTableView.separatorInset = .init(top: 0, left: 10, bottom: 0, right: 10)
+        lapTableView.separatorColor = .white
+        lapTableView.backgroundColor = .black
+        lapTableView.translatesAutoresizingMaskIntoConstraints = false
+    }
+
+    private func setupStartPauseButton(button: UIButton) {
         switch startPauseButtonState {
         case .start:
             button.setTitle(startPauseButtonState.rawValue, for: .normal)
@@ -121,7 +122,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
     }
     
-    func setupLapResetButton(button: UIButton) {
+    private func setupLapResetButton(button: UIButton) {
         switch lapResetButtonState {
         case .unenabledLap:
             button.setTitle("Lap", for: .normal)
@@ -173,63 +174,56 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
     }
 
-    func timerDelegate(tuple : (minutes: Int, seconds: Int, fractions: Int)) {
+    private func timerDelegate(tuple : (minutes: Int, seconds: Int, fractions: Int)) {
         timerLabel.text = "\(String(format: "%02d", tuple.minutes)):\(String(format: "%02d", tuple.seconds)),\(String(format: "%02d", tuple.fractions))"
     }
     
     
     // MARK: - UITableViewDataSource
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return lapTimeManger.getLapCount()
     }
     
-    //      MARK: - dequeueReusableCell?
-    //        tableView.dequeueReusableCell(withIdentifier: "lapCell", for: indexPath)
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: UITableViewCell.CellStyle.value1, reuseIdentifier: "lapCell")
-        cell.backgroundColor = .black
         
-        //      MARK: - Depricated figure out
-        //        var content = cell.defaultContentConfiguration()
-        //        content.text = number
-        //        content.secondaryText = number
-        //        cell.contentConfiguration = content
+        var content = cell.defaultContentConfiguration()
+        
+        cell.backgroundColor = .black
         
         let lapCount = lapTimeManger.getLapCount()
         let lapTableNumber = lapCount - indexPath.row
         let lastLapTimeString = lapTimeManger.getLastLapTime(lap: indexPath.row) ?? ""
-        cell.textLabel?.text = "Lap " + String(lapTableNumber)
-
+        
+        content.text = "Lap " + String(lapTableNumber)
+        
         if lapCount < 3 {
-            cell.textLabel?.textColor = .white
-            cell.detailTextLabel?.textColor = .white
-            cell.detailTextLabel?.text = String(lastLapTimeString)
+            content.textProperties.color = .white
+            content.secondaryTextProperties.color = .white
+            content.secondaryText = String(lastLapTimeString)
         } else {
-            let cellText = lastLapTimeString
-            cell.detailTextLabel?.text = cellText
-            let cellTextWithoutPunktMarks = cellText.replacingOccurrences(of: "[:|,]", with: "", options: .regularExpression)
-
+            content.secondaryText = lastLapTimeString
+            let cellTextWithoutPunktMarks = lastLapTimeString.replacingOccurrences(of: "[:|,]", with: "", options: .regularExpression)
+            
             if cellTextWithoutPunktMarks.contains(lapTimeManger.lapMax()) {
-                cell.detailTextLabel?.textColor = .red
-                cell.textLabel?.textColor = .red
+                content.secondaryTextProperties.color = .red
+                content.textProperties.color = .red
             } else if cellTextWithoutPunktMarks.contains(lapTimeManger.lapMin()) {
-                cell.detailTextLabel?.textColor = .green
-                cell.textLabel?.textColor = .green
+                content.secondaryTextProperties.color = .green
+                content.textProperties.color = .green
             } else {
-                cell.detailTextLabel?.textColor = .white
-                cell.textLabel?.textColor = .white
+                content.secondaryTextProperties.color = .white
+                content.textProperties.color = .white
             }
         }
+        
+        cell.contentConfiguration = content
         return cell
     }
-    
+
     // MARK: UITableViewDelegate
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 40.0
     }
-    
-    
-    
 }
 
