@@ -1,10 +1,3 @@
-//
-//  Extensions.swift
-//  TimerApp
-//
-//  Created by Анна on 1.11.23.
-//
-
 import Foundation
 import UIKit
 

@@ -1,20 +1,24 @@
-
-
 import UIKit
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
+    // MARK: - Properties
+    
+    // Constants for button size and colors
     private let roundButtonSize : CGFloat = 90
     private let startButtonColor = UIColor(red: 52/255, green: 199/255, blue: 89/255, alpha: 0.3)
     private let pauseButtonColor = UIColor(red: 255/255, green: 59/255, blue: 48/255, alpha: 0.4)
     private let unenabledLapButtonColor = UIColor(red: 171/255, green: 171/255, blue: 171/255, alpha: 0.2)
     private let lapResetButtonColor = UIColor(red: 171/255, green: 171/255, blue: 171/255, alpha: 0.4)
     private let buttonDefaultAlpha = 0.7
+    
+    // Timer and lap-related properties
     private let fractionTimer = FractionTimer()
     private var lapTableView = UITableView()
     private let identifier = "lapCell"
     private let lapTimeManger = LapTimeManager()
     
+    // Button states
     private var startPauseButtonState = StartPauseButtonState.start {
         didSet {
             if (startPauseButtonState == .stop) {
@@ -26,6 +30,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     private var lapResetButtonState = LapResetButtonState.unenabledLap
     
+    // UI Elements
     private lazy var timerLabel: UILabel = {
         let label = UILabel()
         label.text = "00:00,00"
@@ -63,6 +68,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         return button
     }()
     
+    // MARK: - View Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         fractionTimer.addDelegate(delegate: timerDelegate)
@@ -70,6 +76,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         setupViews()
     }
     
+    // MARK: - UI Setup
+    /// Configures the appearance and layout of UI components in the view.
     private func setupViews() {
         view.backgroundColor = .black
         view.addSubview(lapResetButton)
@@ -97,6 +105,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         ])
     }
     
+    /// Creates and configures the lap table view.
     private func createTable() {
         lapTableView = UITableView()
         lapTableView.register(UITableViewCell.self, forCellReuseIdentifier: identifier)
@@ -109,6 +118,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         lapTableView.translatesAutoresizingMaskIntoConstraints = false
     }
 
+    // MARK: - Button Setup
+    /**
+     Configures the appearance of the start/pause button based on its state.
+     - Parameter button: The start/pause button to be configured.
+     */
     private func setupStartPauseButton(button: UIButton) {
         switch startPauseButtonState {
         case .start:
@@ -122,6 +136,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
     }
     
+    /**
+     Configures the appearance of the lap/reset button based on its state.
+     - Parameter button: The lap/reset button to be configured.
+     */
     private func setupLapResetButton(button: UIButton) {
         switch lapResetButtonState {
         case .unenabledLap:
@@ -139,6 +157,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
     }
     
+    // MARK: - Button Actions
+    /**
+     Handles the tap event on the lap/reset button and performs corresponding actions.
+     - Parameter sender: The lap/reset button that triggered the action.
+     */
     @objc func lapResetButtonTapped(sender: UIButton) {
         switch lapResetButtonState {
         case .reset:
@@ -152,6 +175,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         setupLapResetButton(button: lapResetButton)
     }
     
+    /**
+     Handles the tap event on the start/pause button and performs corresponding actions.
+     - Parameter sender: The start/pause button that triggered the action.
+     */
     @objc func startPauseButtonTapped(sender: UIButton) {
         startPauseButtonState = startPauseButtonState == .start ? .stop : .start
         setupStartPauseButton(button: startPauseButton)
@@ -159,6 +186,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         setupLapResetButton(button: lapResetButton)
     }
     
+    /// Resets the timer and lap-related components to their initial state after a reset button press.
     private func setupAfterResetButton() {
         timerLabel.text = "00:00,00"
         fractionTimer.reset()
@@ -168,12 +196,18 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
     }
 
+    /// Updates lap timestamps and reloads the lap table view.
     private func lapTimestampsUpdate() {
         if let timeMeasure = timerLabel.text {
             lapTimeManger.addLap(timestamp: timeMeasure)
         }
     }
 
+    // MARK: - Timer Delegate
+    /**
+     Updates the timer label based on the provided time components.
+     - Parameter tuple: A tuple containing minutes, seconds, and fractions.
+     */
     private func timerDelegate(tuple : (minutes: Int, seconds: Int, fractions: Int)) {
         timerLabel.text = "\(String(format: "%02d", tuple.minutes)):\(String(format: "%02d", tuple.seconds)),\(String(format: "%02d", tuple.fractions))"
     }
@@ -186,15 +220,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: UITableViewCell.CellStyle.value1, reuseIdentifier: "lapCell")
-        
         var content = cell.defaultContentConfiguration()
-        
         cell.backgroundColor = .black
-        
         let lapCount = lapTimeManger.getLapCount()
         let lapTableNumber = lapCount - indexPath.row
         let lastLapTimeString = lapTimeManger.getLastLapTime(lap: indexPath.row) ?? ""
-        
         content.text = "Lap " + String(lapTableNumber)
         
         if lapCount < 3 {
@@ -216,7 +246,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 content.textProperties.color = .white
             }
         }
-        
         cell.contentConfiguration = content
         return cell
     }

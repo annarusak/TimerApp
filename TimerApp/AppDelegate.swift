@@ -1,10 +1,3 @@
-//
-//  AppDelegate.swift
-//  TimerApp
-//
-//  Created by Анна on 28.10.23.
-//
-
 import UIKit
 
 @main

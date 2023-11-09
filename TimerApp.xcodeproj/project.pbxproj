@@ -18,6 +18,7 @@
 		F44083EF2AED79FB007D6ABD /* gitignore.txt in Resources */ = {isa = PBXBuildFile; fileRef = F44083EE2AED79FB007D6ABD /* gitignore.txt */; };
 		F461B6F42AF3D19B0078B2AD /* FractionTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F461B6F32AF3D19B0078B2AD /* FractionTimer.swift */; };
 		F485A37B2AF28E7000A72BBF /* UIButtonExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F485A37A2AF28E7000A72BBF /* UIButtonExtensions.swift */; };
+		F4F6E2882AFCF5BB00B3A01C /* TimerDemo.gif in Resources */ = {isa = PBXBuildFile; fileRef = F4F6E2872AFCF5BB00B3A01C /* TimerDemo.gif */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +35,8 @@
 		F44083EE2AED79FB007D6ABD /* gitignore.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = gitignore.txt; sourceTree = "<group>"; };
 		F461B6F32AF3D19B0078B2AD /* FractionTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FractionTimer.swift; sourceTree = "<group>"; };
 		F485A37A2AF28E7000A72BBF /* UIButtonExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIButtonExtensions.swift; sourceTree = "<group>"; };
+		F4F6E2862AFCF1CD00B3A01C /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		F4F6E2872AFCF5BB00B3A01C /* TimerDemo.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = TimerDemo.gif; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -50,6 +53,8 @@
 		F44083CC2AED6F56007D6ABD = {
 			isa = PBXGroup;
 			children = (
+				F4F6E2872AFCF5BB00B3A01C /* TimerDemo.gif */,
+				F4F6E2862AFCF1CD00B3A01C /* README.md */,
 				F44083EE2AED79FB007D6ABD /* gitignore.txt */,
 				F44083D72AED6F57007D6ABD /* TimerApp */,
 				F44083D62AED6F57007D6ABD /* Products */,
@@ -175,6 +180,7 @@
 				F44083E52AED6F58007D6ABD /* LaunchScreen.storyboard in Resources */,
 				F44083E22AED6F58007D6ABD /* Assets.xcassets in Resources */,
 				F44083E02AED6F57007D6ABD /* Main.storyboard in Resources */,
+				F4F6E2882AFCF5BB00B3A01C /* TimerDemo.gif in Resources */,
 				F44083EF2AED79FB007D6ABD /* gitignore.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
