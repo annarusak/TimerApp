@@ -1,4 +1,4 @@
-#  Replica of the iPhone Stopwatch App
+ #  Replica of the iPhone Stopwatch App
 
 This study project demonstrates stopwatch functionality of iPhone clock application.
 
@@ -6,6 +6,5 @@ This study project demonstrates stopwatch functionality of iPhone clock applicat
 
 **Technologies**
 * UIKit 💻
-* MVC 🔨
 * Programmatic UI 🎨
 * CodeLayout 📱
